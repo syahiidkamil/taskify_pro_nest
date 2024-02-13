@@ -47,13 +47,19 @@ export class AuthService {
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const tokens = await this.getTokens(user.id, user.email);
-      this.usersRepository.updateUserById(user.id, {
-        hashedRT: tokens?.refresh_token,
-      });
+      this.updateHashedRT(user.id, tokens);
+
       return tokens;
     } else {
       throw new UnauthorizedException('Please check your login credentials');
     }
+  }
+
+  async updateHashedRT(userId: string, tokens): Promise<void> {
+    const hashedRT = await bcrypt.hash(tokens?.refresh_token, 10);
+    await this.usersRepository.updateUserById(userId, {
+      hashedRT,
+    });
   }
 
   async logout(userId: string): Promise<string> {
@@ -64,14 +70,18 @@ export class AuthService {
     return 'Successfully logged out';
   }
 
-  async refreshToken(userId: string, rt: string): Promise<TokensI> {
+  async refreshToken(userId: string, refreshToken: string): Promise<TokensI> {
     const user = await this.usersRepository.findOneById(userId);
 
     if (!user || !user?.hashedRT)
       throw new UnauthorizedException('Access Denied');
 
-    const rtMatches = await bcrypt.compare(user.hashedRT, rt);
-    if (!rtMatches) throw new UnauthorizedException('Access Denied');
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    const refreshTokenMatches = await bcrypt.compare(
+      user.hashedRT,
+      hashedRefreshToken,
+    );
+    if (!refreshTokenMatches) throw new UnauthorizedException('Access Denied');
 
     const tokens = await this.getTokens(user.id, user.email);
     await this.usersRepository.updateUserById(userId, {

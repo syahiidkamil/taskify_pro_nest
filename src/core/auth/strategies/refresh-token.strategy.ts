@@ -5,6 +5,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 
 import { JwtI } from '../interfaces/jwt.interface';
+import { RefreshJWTUserI } from '../interfaces/refresh-jwt.interface';
 
 @Injectable()
 export class RefreshJwtStrategy extends PassportStrategy(
@@ -19,7 +20,10 @@ export class RefreshJwtStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: JwtI) {
-    return { userId: payload.sub };
+  async validate(request: Request, payload: JwtI): Promise<RefreshJWTUserI> {
+    const authHeader = request.headers['Authorization'];
+
+    const token = authHeader && authHeader.split(' ')[1];
+    return { sub: payload.sub, refresh_token: token };
   }
 }

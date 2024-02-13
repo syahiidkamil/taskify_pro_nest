@@ -8,7 +8,7 @@ import { UsersRepository } from 'src/app/modules/users/users.repository';
 import { JwtI } from '../interfaces/jwt.interface';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(
     private configService: ConfigService,
     private usersRepository: UsersRepository,
@@ -26,6 +26,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException();
     }
-    return user;
+
+    return { sub: payload.sub };
   }
 }
