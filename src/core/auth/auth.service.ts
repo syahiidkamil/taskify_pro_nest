@@ -76,10 +76,9 @@ export class AuthService {
     if (!user || !user?.hashedRT)
       throw new UnauthorizedException('Access Denied');
 
-    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     const refreshTokenMatches = await bcrypt.compare(
+      refreshToken,
       user.hashedRT,
-      hashedRefreshToken,
     );
     if (!refreshTokenMatches) throw new UnauthorizedException('Access Denied');
 

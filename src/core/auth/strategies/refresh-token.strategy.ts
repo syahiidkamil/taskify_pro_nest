@@ -17,13 +17,16 @@ export class RefreshJwtStrategy extends PassportStrategy(
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: configService.get<string>('RT_SECRET'),
+      passReqToCallback: true,
     });
   }
 
   async validate(request: Request, payload: JwtI): Promise<RefreshJWTUserI> {
-    const authHeader = request.headers['Authorization'];
+    const { headers } = request;
+    const { sub } = payload;
+    const authHeader = headers['authorization'] || headers['Authorization'];
 
-    const token = authHeader && authHeader.split(' ')[1];
-    return { sub: payload.sub, refresh_token: token };
+    const refresh_token = authHeader && authHeader.split(' ')[1];
+    return { sub, refresh_token };
   }
 }
