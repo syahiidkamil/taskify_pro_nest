@@ -1,4 +1,5 @@
 import { Body, Controller, Post, UseGuards, HttpCode } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
@@ -10,6 +11,7 @@ import { GetJWTRefreshUser } from 'src/common/get-jwt-refresh-user.decorator';
 import { RefreshJWTUserI } from './interfaces/refresh-jwt.interface';
 import { TokensI } from './interfaces/tokens.interface';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

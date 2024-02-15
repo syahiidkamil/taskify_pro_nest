@@ -10,6 +10,8 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { GetUserId } from 'src/common/get-user-id.decorator';
 import { JwtGuard } from 'src/core/auth/guards/jwt.guard';
 import { CreateTaskDto } from '../tasks/dtos/create-task.dto';
@@ -18,6 +20,7 @@ import { UpdateTaskDto } from '../tasks/dtos/update-task.dto';
 import { TasksService } from '../tasks/tasks.service';
 import { TASK_STATUS } from './tasks.type';
 
+@ApiTags('Tasks')
 @Controller('tasks')
 @UseGuards(JwtGuard)
 export class TasksController {
