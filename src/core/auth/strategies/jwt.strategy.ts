@@ -4,7 +4,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 
-import { UsersRepository } from 'src/app/modules/users/users.repository';
+import { UsersRepository } from 'src/app/users/users.repository';
 import { JwtI } from '../interfaces/jwt.interface';
 
 @Injectable()

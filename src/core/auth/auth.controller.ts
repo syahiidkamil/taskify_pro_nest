@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, HttpCode } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
@@ -20,12 +20,14 @@ export class AuthController {
   }
 
   @Post('login')
+  @HttpCode(200)
   async login(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
     const { email, password } = loginDto;
     return this.authService.login(email, password);
   }
 
   @Post('logout')
+  @HttpCode(200)
   @UseGuards(JwtGuard)
   logout(@GetUserId() userId: string): Promise<string> {
     return this.authService.logout(userId);
@@ -33,6 +35,7 @@ export class AuthController {
 
   @UseGuards(RefreshJwtGuard)
   @Post('refresh')
+  @HttpCode(200)
   refreshTokens(
     @GetJWTRefreshUser() { sub, refresh_token }: RefreshJWTUserI,
   ): Promise<TokensI> {

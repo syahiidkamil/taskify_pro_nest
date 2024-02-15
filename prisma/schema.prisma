@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TaskStatus {
+  PENDING
+  COMPLETE
+}
+
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String   @unique
@@ -20,8 +25,8 @@ model Task {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String?
-  priority    Int
-  status      String
+  priority    Int?
+  status      TaskStatus? @default(PENDING)
   dueDate     DateTime?
   userId      String
   user        User     @relation(fields: [userId], references: [id])

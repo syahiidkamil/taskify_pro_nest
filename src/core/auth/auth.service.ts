@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { UsersRepository } from 'src/app/modules/users/users.repository';
+import { UsersRepository } from 'src/app/users/users.repository';
 import { RegisterDto } from './dtos/register.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtI } from './interfaces/jwt.interface';
@@ -56,7 +56,8 @@ export class AuthService {
   }
 
   async updateHashedRT(userId: string, tokens): Promise<void> {
-    const hashedRT = await bcrypt.hash(tokens?.refresh_token, 10);
+    const salt = await bcrypt.genSalt();
+    const hashedRT = await bcrypt.hash(tokens?.refresh_token, salt);
     await this.usersRepository.updateUserById(userId, {
       hashedRT,
     });
