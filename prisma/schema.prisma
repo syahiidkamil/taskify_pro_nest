@@ -19,15 +19,18 @@ model User {
   name      String?
   tasks     Task[]
   hashedRT  String?
+  createdDate DateTime   @default(now())
 }
 
 model Task {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String?
-  priority    Int?
-  status      TaskStatus? @default(PENDING)
-  dueDate     DateTime?
+  priority    Int?       @default(0)
+  status      TaskStatus @default(PENDING)
+  dueDate     DateTime?  @default(now())
+  createdDate DateTime   @default(now())
   userId      String
-  user        User     @relation(fields: [userId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
 }
+

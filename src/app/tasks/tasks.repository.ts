@@ -13,7 +13,7 @@ export class TasksRepository {
     paginationOptions: { limit: number; offset: number },
   ): Promise<Task[]> {
     const { status, sort, order } = filterOptions;
-    const { limit, offset } = paginationOptions;
+    const { limit = 10, offset = 0 } = paginationOptions;
     const orderBy = sort ? { [sort]: order } : {};
 
     return this.prisma.task.findMany({

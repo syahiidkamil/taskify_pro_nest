@@ -15,8 +15,9 @@ export class CreateTaskDto {
   @IsString()
   description?: string;
 
+  @IsOptional()
   @IsInt()
-  priority: number;
+  priority?: number;
 
   @IsOptional()
   @IsDateString()
