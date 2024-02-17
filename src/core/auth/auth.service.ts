@@ -12,6 +12,7 @@ import { RegisterDto } from './dtos/register.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtI } from './interfaces/jwt.interface';
 import { TokensI } from './interfaces/tokens.interface';
+import { TasksService } from 'src/app/tasks/tasks.service';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,7 @@ export class AuthService {
     private configService: ConfigService,
     private usersRepository: UsersRepository,
     private jwtService: JwtService,
+    private tasksService: TasksService,
   ) {}
 
   async register(createUserDto: RegisterDto) {
@@ -27,10 +29,13 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     try {
-      await this.usersRepository.create({
+      const user = await this.usersRepository.create({
         ...createUserDto,
         password: hashedPassword,
       });
+
+      this.insertInitialTasks(user.id);
+
       return 'success';
     } catch (error) {
       if (error.code === 'P2002') {
@@ -113,5 +118,18 @@ export class AuthService {
       access_token,
       refresh_token,
     };
+  }
+
+  private async insertInitialTasks(userId: string): Promise<void> {
+    this.tasksService.create(userId, {
+      title: 'Revamp the task page UI',
+      description: 'Update the UI to be more user-friendly.',
+      priority: 1,
+    });
+    this.tasksService.create(userId, {
+      title: 'Implement state management',
+      description: 'Set up state management for the app.',
+      priority: 2,
+    });
   }
 }

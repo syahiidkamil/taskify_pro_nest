@@ -8,9 +8,12 @@ import { AuthController } from './auth.controller';
 import { UsersRepository } from 'src/app/users/users.repository';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { RefreshJwtStrategy } from './strategies/refresh-token.strategy';
+import { TasksService } from 'src/app/tasks/tasks.service';
+import { TasksModule } from 'src/app/tasks/tasks.module';
 
 @Module({
   imports: [
+    TasksModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -23,7 +26,13 @@ import { RefreshJwtStrategy } from './strategies/refresh-token.strategy';
       }),
     }),
   ],
-  providers: [AuthService, UsersRepository, JwtStrategy, RefreshJwtStrategy],
+  providers: [
+    AuthService,
+    UsersRepository,
+    JwtStrategy,
+    RefreshJwtStrategy,
+    TasksService,
+  ],
   controllers: [AuthController],
   exports: [PassportModule],
 })
