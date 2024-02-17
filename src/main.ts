@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common/pipes';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
+  const port = process.env.PORT || 3000;
   const app = await NestFactory.create(MainModule);
   app.useGlobalPipes(new ValidationPipe());
 
@@ -25,6 +26,6 @@ async function bootstrap() {
   if (process.env.NODE_ENV === 'development') {
     app.enableCors();
   }
-  await app.listen(3000);
+  await app.listen(port, '0.0.0.0');
 }
 bootstrap();
