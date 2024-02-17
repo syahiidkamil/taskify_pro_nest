@@ -22,7 +22,9 @@ async function bootstrap() {
   process.on('unhandledRejection', (reason, promise) => {
     console.log('Unhandled Rejection at:', promise, 'reason:', reason);
   });
-
+  if (process.env.NODE_ENV === 'development') {
+    app.enableCors();
+  }
   await app.listen(3000);
 }
 bootstrap();
