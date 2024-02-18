@@ -11,7 +11,6 @@ import { UsersRepository } from 'src/app/users/users.repository';
 import { RegisterDto } from './dtos/register.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtI } from './interfaces/jwt.interface';
-import { TokensI } from './interfaces/tokens.interface';
 import { TasksService } from 'src/app/tasks/tasks.service';
 import { LoginResponseDto } from './dtos/login-response.dto';
 import { LogoutResponseDto } from './dtos/logout-response.dto';

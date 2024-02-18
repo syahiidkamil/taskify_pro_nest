@@ -15,7 +15,6 @@ import { JwtGuard } from './guards/jwt.guard';
 import { RefreshJwtGuard } from './guards/refresh-token.guard';
 import { GetJWTRefreshUser } from 'src/common/get-jwt-refresh-user.decorator';
 import { RefreshJWTUserI } from './interfaces/refresh-jwt.interface';
-import { TokensI } from './interfaces/tokens.interface';
 import { LoginResponseDto } from './dtos/login-response.dto';
 import { LogoutResponseDto } from './dtos/logout-response.dto';
 import { RegisterResponseDto } from './dtos/register-response.dto';
