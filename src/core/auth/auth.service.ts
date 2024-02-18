@@ -13,6 +13,10 @@ import { ConfigService } from '@nestjs/config';
 import { JwtI } from './interfaces/jwt.interface';
 import { TokensI } from './interfaces/tokens.interface';
 import { TasksService } from 'src/app/tasks/tasks.service';
+import { LoginResponseDto } from './dtos/login-response.dto';
+import { LogoutResponseDto } from './dtos/logout-response.dto';
+import { RegisterResponseDto } from './dtos/register-response.dto';
+import { RefreshResponseDto } from './dtos/refresh-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +27,7 @@ export class AuthService {
     private tasksService: TasksService,
   ) {}
 
-  async register(createUserDto: RegisterDto) {
+  async register(createUserDto: RegisterDto): Promise<RegisterResponseDto> {
     const { password } = createUserDto;
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -36,7 +40,7 @@ export class AuthService {
 
       this.insertInitialTasks(user.id);
 
-      return 'success';
+      return { message: 'Register successful' };
     } catch (error) {
       if (error.code === 'P2002') {
         throw new ConflictException('Email already in use');
@@ -45,10 +49,7 @@ export class AuthService {
     }
   }
 
-  async login(
-    email: string,
-    password: string,
-  ): Promise<{ accessToken: string }> {
+  async login(email: string, password: string): Promise<LoginResponseDto> {
     const user = await this.usersRepository.findOneByEmail(email);
 
     if (user && (await bcrypt.compare(password, user.password))) {
@@ -69,15 +70,18 @@ export class AuthService {
     });
   }
 
-  async logout(userId: string): Promise<string> {
+  async logout(userId: string): Promise<LogoutResponseDto> {
     await this.usersRepository.updateUserWithHashById(userId, {
       hashedRT: null,
     });
 
-    return 'Successfully logged out';
+    return { message: 'Logout successful' };
   }
 
-  async refreshToken(userId: string, refreshToken: string): Promise<TokensI> {
+  async refreshToken(
+    userId: string,
+    refreshToken: string,
+  ): Promise<RefreshResponseDto> {
     const user = await this.usersRepository.findOneById(userId);
 
     if (!user || !user?.hashedRT)

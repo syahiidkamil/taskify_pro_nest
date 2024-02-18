@@ -15,6 +15,12 @@ async function bootstrap() {
     )
     .setVersion('1.0')
     .addBearerAuth()
+    .addSecurity('refresh_token', {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      description: 'Use this to set the refresh token as a Bearer token',
+    })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
